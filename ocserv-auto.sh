@@ -182,7 +182,7 @@ _EOF_
 
     #设定radius认证与统计
     sed -i 's@auth = "pam"@#auth = "pam"\nauth = "radius[config=/etc/radcli/radiusclient.conf,groupconfig=true]"@g' "${confdir}/ocserv.conf"
-    sed -i 's@^#acct.*@acct = "radius[config=/etc/radiusclient/radiusclient.conf]"@g' "${confdir}/ocserv.conf"
+    sed -i 's@^#acct.*@acct = "radius[config=/etc/radcli/radiusclient.conf]"@g' "${confdir}/ocserv.conf"
     sed -i "s/#stats-report-time/stats-report-time/g" "${confdir}/ocserv.conf"
     #设定客户端数量限制
     sed -i "s/max-same-clients = 2/max-same-clients = ${maxsameclients}/g" "${confdir}/ocserv.conf"
