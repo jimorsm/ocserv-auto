@@ -504,9 +504,11 @@ function ConfigFirewall {
         echo "Adding firewall ports."
         firewall-cmd --permanent --zone=public --add-port=${port}/tcp
         firewall-cmd --permanent --zone=public --add-port=${port}/udp
+        echo "Adding firewall service."
+        firewall-cmd --permanent --zone=public --add-service=radius
         echo "Allow firewall to forward."
         firewall-cmd --permanent --zone=public --add-masquerade
-        echo "Reload firewall configure."
+        echo "Reload firewall service."
         firewall-cmd --reload
     elif [[ ${iptablesisactive} = 'active' ]]; then
         iptables -I INPUT -p tcp --dport ${port} -j ACCEPT
