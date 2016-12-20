@@ -38,7 +38,7 @@ function ConfigEnvironmentVariable {
     # DNS
     dns1="202.38.93.153"
     dns2="202.141.176.93"
-    dns2="202.141.162.123"
+    dns3="202.141.162.123"
     # 配置目录
     confdir="/etc/ocserv"
 
