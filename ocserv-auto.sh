@@ -40,6 +40,9 @@ function ConfigEnvironmentVariable {
     dns2="8.8.4.4"
     # 配置目录
     confdir="/etc/ocserv"
+    #lotServer
+    lotServer="/appex/bin/lotServer.sh"
+    serverSpeeder="/serverspeeder/bin/serverSpeeder.sh"
 
     # 获取网卡接口名称
     systemctl start NetworkManager.service
@@ -207,6 +210,31 @@ _EOF_
     sed -i "s/cookie-timeout = 300/cookie-timeout = 86400/g" "${confdir}/ocserv.conf"
     #取消user-profile
     sed -i 's/user-profile = profile.xml/#user-profile = profile.xml/g' "${confdir}/ocserv.conf"
+    #锐速加速设置
+
+    if [ -f "$lotServer" ]; then
+        cat << _EOF_ >>${confdir}/lotServerreload.sh 
+        #!/bin/sh
+        wanif=$(ip a|grep vpns|grep inet|awk '{print $NF}') 
+        sed -i "s/^accif=.*\$/accif=\"eth0 $(echo $wanif)\"/" /appex/etc/config
+        /appex/bin/lotServer.sh reload
+        _EOF_
+        chmod +x ${confdir}/lotServerreload.sh
+        sed -i 's@^#connect-script.*@connect-script = ${confdir}/lotServerreload.sh@g' "${confdir}/lotServerreload.sh"
+        sed -i 's@^#disconnect-script.*@connect-script = ${confdir}/lotServerreload.sh@g' "${confdir}/lotServerreload.sh"
+    fi
+
+    if [ -f "$serverSpeeder" ]; then
+        cat << _EOF_ >>${confdir}/serverSpeederreload.sh
+        #!/bin/sh
+        wanif=$(ip a|grep vpns|grep inet|awk '{print $NF}')
+        sed -i "s/^accif=.*\$/accif=\"eth0 $(echo $wanif)\"/" /serverspeeder/etc/config
+        /serverspeeder/bin/serverSpeeder.sh reload
+        _EOF_
+        chmod +x ${confdir}/serverSpeederreload.sh
+        sed -i 's@^#connect-script.*@connect-script = ${confdir}/serverSpeederreload.sh@g' "${confdir}/serverSpeederreload.sh"
+        sed -i 's@^#disconnect-script.*@connect-script = ${confdir}/serverSpeederreload.sh@g' "${confdir}/serverSpeederreload.sh"
+    fi
 
 #     cat << _EOF_ >>${confdir}/ocserv.conf
 # # Apple
