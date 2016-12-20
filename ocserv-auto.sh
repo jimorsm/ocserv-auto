@@ -213,20 +213,24 @@ _EOF_
     #锐速加速设置
 
     if [ -f "$lotServer" ]; then
-        echo "#!/bin/sh
-wanif=$(ip a|grep vpns|grep inet|awk '{print $NF}') 
+        cat << _EOF_ >${confdir}/lotServerreload.sh 
+#!/bin/sh
+wanif=\$(ip a|grep vpns|grep inet|awk '{print $NF}') 
 sed -i "s/^accif=.*\$/accif=\"eth0 $(echo $wanif)\"/" /appex/etc/config
-/appex/bin/lotServer.sh reload" > ${confdir}/lotServerreload.sh 
+/appex/bin/lotServer.sh reload
+_EOF_
         chmod +x ${confdir}/lotServerreload.sh
         sed -i 's@^#connect-script.*@connect-script = /etc/ocserv/lotServerreload.sh@g' "${confdir}/ocserv.conf"
         sed -i 's@^#disconnect-script.*@disconnect-script = /etc/ocserv/lotServerreload.sh@g' "${confdir}/ocserv.conf"
     fi
 
     if [ -f "$serverSpeeder" ]; then
-        echo "#!/bin/sh
-wanif=$(ip a|grep vpns|grep inet|awk '{print $NF}')
+        cat << _EOF_ >${confdir}/serverSpeederreload.sh
+#!/bin/sh
+wanif=\$(ip a|grep vpns|grep inet|awk '{print $NF}')
 sed -i "s/^accif=.*\$/accif=\"eth0 $(echo $wanif)\"/" /serverspeeder/etc/config
-/serverspeeder/bin/serverSpeeder.sh reload" > ${confdir}/serverSpeederreload.sh
+/serverspeeder/bin/serverSpeeder.sh reload
+_EOF_
         chmod +x ${confdir}/serverSpeederreload.sh
         sed -i 's@^#connect-script.*@connect-script = /etc/ocserv/serverSpeederreload.sh@g' "${confdir}/ocserv.conf"
         sed -i 's@^#disconnect-script.*@disconnect-script = /etc/ocserv/serverSpeederreload.sh@g' "${confdir}/ocserv.conf"
