@@ -213,10 +213,10 @@ _EOF_
     #锐速加速设置
 
     if [ -f "$lotServer" ]; then
-        touch ${confdir}/lotServerreload.sh
+        echo ${confdir}/lotServerreload.sh
         chmod +x ${confdir}/lotServerreload.sh
-        sed -i 's@^#connect-script.*@connect-script = ${confdir}/lotServerreload.sh@g' "${confdir}/lotServerreload.sh"
-        sed -i 's@^#disconnect-script.*@connect-script = ${confdir}/lotServerreload.sh@g' "${confdir}/lotServerreload.sh"
+        sed -i 's@^#connect-script.*@connect-script = ${confdir}/lotServerreload.sh@g' "${confdir}/ocserv.conf"
+        sed -i 's@^#disconnect-script.*@disconnect-script = ${confdir}/lotServerreload.sh@g' "${confdir}/ocserv.conf"
         cat << _EOF_ >>${confdir}/lotServerreload.sh 
 #!/bin/sh
 wanif=$(ip a|grep vpns|grep inet|awk '{print $NF}') 
@@ -226,10 +226,10 @@ _EOF_
     fi
 
     if [ -f "$serverSpeeder" ]; then
-        touch ${confdir}/serverSpeederreload.sh
+        echo > ${confdir}/serverSpeederreload.sh
         chmod +x ${confdir}/serverSpeederreload.sh
-        sed -i 's@^#connect-script.*@connect-script = ${confdir}/serverSpeederreload.sh@g' "${confdir}/serverSpeederreload.sh"
-        sed -i 's@^#disconnect-script.*@connect-script = ${confdir}/serverSpeederreload.sh@g' "${confdir}/serverSpeederreload.sh"
+        sed -i 's@^#connect-script.*@connect-script = ${confdir}/serverSpeederreload.sh@g' "${confdir}/ocserv.conf"
+        sed -i 's@^#disconnect-script.*@disconnect-script = ${confdir}/serverSpeederreload.sh@g' "${confdir}/ocserv.conf"
         cat << _EOF_ >>${confdir}/serverSpeederreload.sh
 #!/bin/sh
 wanif=$(ip a|grep vpns|grep inet|awk '{print $NF}')
