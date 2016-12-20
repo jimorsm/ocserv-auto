@@ -213,29 +213,23 @@ _EOF_
     #锐速加速设置
 
     if [ -f "$lotServer" ]; then
-        echo ${confdir}/lotServerreload.sh
-        chmod +x ${confdir}/lotServerreload.sh
-        sed -i 's@^#connect-script.*@connect-script = ${confdir}/lotServerreload.sh@g' "${confdir}/ocserv.conf"
-        sed -i 's@^#disconnect-script.*@disconnect-script = ${confdir}/lotServerreload.sh@g' "${confdir}/ocserv.conf"
-        cat << _EOF_ >>${confdir}/lotServerreload.sh 
-#!/bin/sh
+        echo "#!/bin/sh
 wanif=$(ip a|grep vpns|grep inet|awk '{print $NF}') 
 sed -i "s/^accif=.*\$/accif=\"eth0 $(echo $wanif)\"/" /appex/etc/config
-/appex/bin/lotServer.sh reload
-_EOF_
+/appex/bin/lotServer.sh reload" > ${confdir}/lotServerreload.sh 
+        chmod +x ${confdir}/lotServerreload.sh
+        sed -i 's@^#connect-script.*@connect-script = /etc/ocserv/lotServerreload.sh@g' "${confdir}/ocserv.conf"
+        sed -i 's@^#disconnect-script.*@disconnect-script = /etc/ocserv/lotServerreload.sh@g' "${confdir}/ocserv.conf"
     fi
 
     if [ -f "$serverSpeeder" ]; then
-        echo > ${confdir}/serverSpeederreload.sh
-        chmod +x ${confdir}/serverSpeederreload.sh
-        sed -i 's@^#connect-script.*@connect-script = ${confdir}/serverSpeederreload.sh@g' "${confdir}/ocserv.conf"
-        sed -i 's@^#disconnect-script.*@disconnect-script = ${confdir}/serverSpeederreload.sh@g' "${confdir}/ocserv.conf"
-        cat << _EOF_ >>${confdir}/serverSpeederreload.sh
-#!/bin/sh
+        echo "#!/bin/sh
 wanif=$(ip a|grep vpns|grep inet|awk '{print $NF}')
 sed -i "s/^accif=.*\$/accif=\"eth0 $(echo $wanif)\"/" /serverspeeder/etc/config
-/serverspeeder/bin/serverSpeeder.sh reload
-_EOF_
+/serverspeeder/bin/serverSpeeder.sh reload" > ${confdir}/serverSpeederreload.sh
+        chmod +x ${confdir}/serverSpeederreload.sh
+        sed -i 's@^#connect-script.*@connect-script = /etc/ocserv/serverSpeederreload.sh@g' "${confdir}/ocserv.conf"
+        sed -i 's@^#disconnect-script.*@disconnect-script = /etc/ocserv/serverSpeederreload.sh@g' "${confdir}/ocserv.conf"
     fi
 
 #     cat << _EOF_ >>${confdir}/ocserv.conf
