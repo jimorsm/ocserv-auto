@@ -218,11 +218,11 @@ _EOF_
         sed -i 's@^#connect-script.*@connect-script = ${confdir}/lotServerreload.sh@g' "${confdir}/lotServerreload.sh"
         sed -i 's@^#disconnect-script.*@connect-script = ${confdir}/lotServerreload.sh@g' "${confdir}/lotServerreload.sh"
         cat << _EOF_ >>${confdir}/lotServerreload.sh 
-        #!/bin/sh
-        wanif=$(ip a|grep vpns|grep inet|awk '{print $NF}') 
-        sed -i "s/^accif=.*\$/accif=\"eth0 $(echo $wanif)\"/" /appex/etc/config
-        /appex/bin/lotServer.sh reload
-        _EOF_
+#!/bin/sh
+wanif=$(ip a|grep vpns|grep inet|awk '{print $NF}') 
+sed -i "s/^accif=.*\$/accif=\"eth0 $(echo $wanif)\"/" /appex/etc/config
+/appex/bin/lotServer.sh reload
+_EOF_
     fi
 
     if [ -f "$serverSpeeder" ]; then
@@ -231,11 +231,11 @@ _EOF_
         sed -i 's@^#connect-script.*@connect-script = ${confdir}/serverSpeederreload.sh@g' "${confdir}/serverSpeederreload.sh"
         sed -i 's@^#disconnect-script.*@connect-script = ${confdir}/serverSpeederreload.sh@g' "${confdir}/serverSpeederreload.sh"
         cat << _EOF_ >>${confdir}/serverSpeederreload.sh
-        #!/bin/sh
-        wanif=$(ip a|grep vpns|grep inet|awk '{print $NF}')
-        sed -i "s/^accif=.*\$/accif=\"eth0 $(echo $wanif)\"/" /serverspeeder/etc/config
-        /serverspeeder/bin/serverSpeeder.sh reload
-        _EOF_
+#!/bin/sh
+wanif=$(ip a|grep vpns|grep inet|awk '{print $NF}')
+sed -i "s/^accif=.*\$/accif=\"eth0 $(echo $wanif)\"/" /serverspeeder/etc/config
+/serverspeeder/bin/serverSpeeder.sh reload
+_EOF_
     fi
 
 #     cat << _EOF_ >>${confdir}/ocserv.conf
