@@ -502,12 +502,16 @@ function ConfigFirewall {
     # 添加防火墙允许列表
     if [[ ${firewalldisactive} = 'active' ]]; then
         echo "Adding firewall ports."
-        firewall-cmd --permanent --zone=public --add-port=${port}/tcp
-        firewall-cmd --permanent --zone=public --add-port=${port}/udp
+        #firewall-cmd --permanent --zone=public --add-port=${port}/tcp
+        #firewall-cmd --permanent --zone=public --add-port=${port}/udp
+        firewall-cmd --permanent --add-port=${port}/tcp
+        firewall-cmd --permanent --add-port=${port}/udp
         echo "Adding firewall service."
-        firewall-cmd --permanent --zone=public --add-service=radius
+        #firewall-cmd --permanent --zone=public --add-service=radius
+        firewall-cmd --permanent --add-service=radius
         echo "Allow firewall to forward."
-        firewall-cmd --permanent --zone=public --add-masquerade
+        #firewall-cmd --permanent --zone=public --add-masquerade
+        firewall-cmd --permanent --add-masquerade
         echo "Reload firewall service."
         firewall-cmd --reload
     elif [[ ${iptablesisactive} = 'active' ]]; then
