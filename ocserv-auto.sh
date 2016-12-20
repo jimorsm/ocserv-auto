@@ -36,9 +36,8 @@ function ConfigEnvironmentVariable {
     # VPN 内网 IP 段
     vpnnetwork="192.168.8.0/21"
     # DNS
-    dns1="202.38.93.153"
-    dns2="202.141.176.93"
-    dns3="202.141.162.123"
+    dns1="8.8.8.8"
+    dns2="8.8.4.4"
     # 配置目录
     confdir="/etc/ocserv"
 
@@ -203,7 +202,7 @@ _EOF_
     #设置分配ip地址
     sed -i "s@#ipv4-network = 192.168.1.0/24@ipv4-network = ${vpnnetwork}@g" "${confdir}/ocserv.conf"
     #设置dns
-    sed -i "s/#dns = 192.168.1.2/dns = ${dns1}\ndns = ${dns2}\ndns = ${dns3}/g" "${confdir}/ocserv.conf"
+    sed -i "s/#dns = 192.168.1.2/dns = ${dns1}\ndns = ${dns2}/g" "${confdir}/ocserv.conf"
     #设置cookie
     sed -i "s/cookie-timeout = 300/cookie-timeout = 86400/g" "${confdir}/ocserv.conf"
     #取消user-profile
