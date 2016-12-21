@@ -211,30 +211,31 @@ _EOF_
     #取消user-profile
     sed -i 's/user-profile = profile.xml/#user-profile = profile.xml/g' "${confdir}/ocserv.conf"
     #锐速加速设置
-
-    if [ -f "$lotServer" ]; then
-        cat << _EOF_ >${confdir}/lotServerreload.sh 
+    cat << _EOF_ >${confdir}/reloadAppex.sh
 #!/bin/sh
-wanif=\$(ip a|grep vpns|grep inet|awk '{print $NF}') 
-sed -i "s/^accif=.*\$/accif=\"eth0 $(echo $wanif)\"/" /appex/etc/config
-/appex/bin/lotServer.sh reload
+#判断加速类型
+lotServer="/appex/bin/"
+serverSpeeder="/serverspeeder/bin/"
+if [ -d "\$lotServer" ]; then
+path=\$lotServer
+fi
+if [ -d "\$serverSpeeder" ]; then
+path=\$serverSpeeder
+fi   
+#判断是否需要添加
+touch /tmp/accif
+cat /tmp/accif | read line
+wanif=\$(ip a|grep vpns|grep inet|awk '{print \$NF}')
+accif="eth0 \$(echo \$wanif)"
+if [[ "\$line" != "\$accif" ]];then
+\$path/setConfig.sh wanIf \$accif
+echo \$accif > /tmp/accif
+fi
+exit
 _EOF_
-        chmod +x ${confdir}/lotServerreload.sh
-        sed -i 's@^#connect-script.*@connect-script = /etc/ocserv/lotServerreload.sh@g' "${confdir}/ocserv.conf"
-        sed -i 's@^#disconnect-script.*@disconnect-script = /etc/ocserv/lotServerreload.sh@g' "${confdir}/ocserv.conf"
-    fi
+    chmod +x ${confdir}/reloadAppex.sh
+    echo "*/1 * * * * /etc/ocserv/reloadAppex.sh" > /var/spool/cron/root
 
-    if [ -f "$serverSpeeder" ]; then
-        cat << _EOF_ >${confdir}/serverSpeederreload.sh
-#!/bin/sh
-wanif=\$(ip a|grep vpns|grep inet|awk '{print $NF}')
-sed -i "s/^accif=.*\$/accif=\"eth0 $(echo $wanif)\"/" /serverspeeder/etc/config
-/serverspeeder/bin/serverSpeeder.sh reload
-_EOF_
-        chmod +x ${confdir}/serverSpeederreload.sh
-        sed -i 's@^#connect-script.*@connect-script = /etc/ocserv/serverSpeederreload.sh@g' "${confdir}/ocserv.conf"
-        sed -i 's@^#disconnect-script.*@disconnect-script = /etc/ocserv/serverSpeederreload.sh@g' "${confdir}/ocserv.conf"
-    fi
 
 #     cat << _EOF_ >>${confdir}/ocserv.conf
 # # Apple
